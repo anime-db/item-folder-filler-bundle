@@ -1,1 +1,5 @@
 services:
+    anime_db.item_folder_filler.filler_folder:
+        class: AnimeDb\Bundle\ItemFolderFillerBundle\Service\FillerFolder
+        tags:
+            -  { name: anime_db.item }
