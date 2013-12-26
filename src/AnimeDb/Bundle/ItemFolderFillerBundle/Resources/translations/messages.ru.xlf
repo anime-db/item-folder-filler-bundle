@@ -7,8 +7,8 @@
                 <target>Заполнить папку</target>
             </trans-unit>
             <trans-unit id="2">
-                <source>Fill folder for %name%</source>
-                <target>Заполнить папку для %name%</target>
+                <source>Filling folders for %name%</source>
+                <target>Заполнение папки для %name%</target>
             </trans-unit>
             <trans-unit id="3">
                 <source><![CDATA[Folder successfully filled. <a href="%link%">Back</a> to the item.]]></source>

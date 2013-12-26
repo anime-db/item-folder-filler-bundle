@@ -1,10 +1,10 @@
 {% extends 'AnimeDbCatalogBundle::layout.html.twig' %}
 
-{% block title %}{% trans with {'%name%': item.name } %}Fill folder for %name%{% endtrans %}{% endblock %}
+{% block title %}{% trans with {'%name%': item.name } %}Filling folders for %name%{% endtrans %}{% endblock %}
 
 {% block content %}
 <section class="fill-item-folder">
-	<h2>{% trans with {'%name%': item.name } %}Fill folder for %name%{% endtrans %}</h2>
+	<h2>{% trans with {'%name%': item.name } %}Filling folders for %name%{% endtrans %}</h2>
 	<article>
 		<p>{% trans with {'%link%': path('item_show', {'id': item.id, 'name': item.name}) } %}Folder successfully filled. <a href="%link%">Back</a> to the item.{% endtrans %}</p>
 	</article>
