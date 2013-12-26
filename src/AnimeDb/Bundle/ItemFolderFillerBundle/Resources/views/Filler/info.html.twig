@@ -3,11 +3,135 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>{{ item.name }}</title>
+<style type="text/css">
+header {
+	font-weight: bold;
+	margin-right: 5px;
+	vertical-align: top;
+	float: left;
+}
+article {
+	float: left;
+}
+section,
+.names article,
+.genres article,
+.sources article,
+.file-info article,
+.summary article,
+.episodes article {
+	float: none;
+	clear: both;
+}
+</style>
 </head>
 <body>
-<h1>{{ item.name }}</h1>
+<h1 class="name">{{ item.name }}</h1>
 {% if cover %}
-	<img src="{{ cover }}" alt="{{ item.name }}" />
+	<img src="{{ cover }}" alt="{{ item.name }}" class="cover" />
+{% endif %}
+<section class="type">
+	<header>{% trans %}Type{% endtrans %}</header>
+	<article>{{ item.type.name }}</article>
+</section>
+<section class="episodes_number">
+	<header>{% trans %}Number of episodes{% endtrans %}</header>
+	<article><span>{{ item.episodesnumber }}</span> {% trans %}ep.{% endtrans %}</article> 
+</section>
+<section class="duration">
+	<header>{% trans %}The duration of the episode{% endtrans %}</header>
+	<article><span>{{ item.duration }}</span> {% trans %}m.{% endtrans %}</article>
+</section>
+<section class="status">
+	<header>{% trans %}Status{% endtrans %}</header>
+	<article>
+		{% trans %}From{% endtrans %}
+		<span class="date-start">{{ item.datestart|date('Y-m-d') }}</span>
+		{% if item.dateend %}
+			{% trans %}to{% endtrans %}
+			<span class="date-end">{{ item.dateend|date('Y-m-d') }}</span>
+		{% endif %}
+	</article>
+</section>
+{% if item.studio %}
+	<section class="studio">
+		<header>{% trans %}Studio{% endtrans %}</header>
+		<article>{{ item.studio.name }}</article>
+	</section>
+{% endif %}
+{% if item.country %}
+	<section class="country">
+		<header>{% trans %}Country{% endtrans %}</header>
+		<article>{{ item.country.name }}</article>
+	</section>
+{% endif %}
+{% if item.storage %}
+	<section class="storage">
+		<header>{% trans %}Storage{% endtrans %}</header>
+		<article>{{ item.storage.name }}</article>
+	</section>
+{% endif %}
+<section class="rating">
+	<header>{% trans %}Rating{% endtrans %}</header>
+	<article>{{ item.rating }}</article>
+</section>
+{% if item.names is not empty %}
+	<section class="names">
+		<header>{% trans %}Alternative names{% endtrans %}</header>
+		<article>
+			<ul>
+				{% for name in item.names %}
+					<li>{{ name.name }}</li>
+				{% endfor %}
+			</ul>
+		</article>
+	</section>
+{% endif %}
+{% if item.genres is not empty %}
+	<section class="genres">
+		<header>{% trans %}Genres{% endtrans %}</header>
+		<article>
+			<ul>
+				{% for genre in item.genres %}
+					<li>{{ genre.name }}</li>
+				{% endfor %}
+			</ul>
+		</article>
+	</section>
+{% endif %}
+{% if item.sources is not empty %}
+	<section class="sources">
+		<header>{% trans %}Sources{% endtrans %}</header>
+		<article>
+			<ul>
+				{% for source in item.sources %}
+					<li>{{ source.url }}</li>
+				{% endfor %}
+			</ul>
+		</article>
+	</section>
+{% endif %}
+{% if item.translate %}
+	<section class="translate">
+		<header>{% trans %}Translate{% endtrans %}</header>
+		<article>{{ item.translate|nl2br }}</article>
+	</section>
+{% endif %}
+{% if item.fileinfo %}
+	<section class="file-info">
+		<header>{% trans %}File info{% endtrans %}</header>
+		<article>{{ item.fileinfo|nl2br }}</article>
+	</section>
+{% endif %}
+<section class="summary">
+	<header>{% trans %}Summary{% endtrans %}</header>
+	<article>{{ item.summary }}</article>
+</section>
+{% if item.episodes %}
+	<section class="episodes">
+		<header>{% trans %}Episodes{% endtrans %}</header>
+		<article>{{ item.episodes|nl2br }}</article>
+	</section>
 {% endif %}
 </body>
 </html>
