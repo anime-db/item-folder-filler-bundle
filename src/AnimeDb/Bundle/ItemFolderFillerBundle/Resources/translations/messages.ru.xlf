@@ -3,8 +3,16 @@
     <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
             <trans-unit id="1">
-                <source>Filler folder</source>
-                <target>Наполнитель папки</target>
+                <source>Fill folder</source>
+                <target>Заполнить папку</target>
+            </trans-unit>
+            <trans-unit id="2">
+                <source>Fill folder for %name%</source>
+                <target>Заполнить папку для %name%</target>
+            </trans-unit>
+            <trans-unit id="3">
+                <source><![CDATA[Folder successfully filled. <a href="%link%">Back</a> to the item.]]></source>
+                <target><![CDATA[Папка успешно заполнена. <a href="%link%">Вернуться</a> к записи.]]></target>
             </trans-unit>
         </body>
     </file>
