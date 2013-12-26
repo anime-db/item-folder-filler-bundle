@@ -52,7 +52,13 @@ class FillerFolder extends ItemPlugin
      */
     public function buildMenu(ItemInterface $node, ItemEntity $item)
     {
-        $node->addChild('Filler folder', ['route' => 'item_folder_filler_fill'])
+        $node->addChild('Filler folder', [
+            'route' => 'item_folder_filler_fill',
+            'routeParameters' => [
+                'id' => $item->getId(),
+                'name' => $item->getName()
+            ]
+        ])
             ->setLinkAttribute('class', 'icon-label icon-fill');
     }
 }

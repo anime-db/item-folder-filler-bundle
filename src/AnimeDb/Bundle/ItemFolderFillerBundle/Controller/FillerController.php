@@ -11,6 +11,7 @@
 namespace AnimeDb\Bundle\ItemFolderFillerBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AnimeDb\Bundle\CatalogBundle\Entity\Item;
 
 /**
  * Filler
@@ -23,9 +24,11 @@ class FillerController extends Controller
     /**
      * Fill item folder
      *
+     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function fillAction()
+    public function fillAction(Item $item)
     {
         return $this->render('AnimeDbItemFolderFillerBundle:Filler:fill.html.twig');
     }
