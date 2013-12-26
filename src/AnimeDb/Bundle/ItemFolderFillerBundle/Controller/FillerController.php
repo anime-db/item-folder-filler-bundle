@@ -30,6 +30,9 @@ class FillerController extends Controller
      */
     public function fillAction(Item $item)
     {
+        // do fill
+        $this->get('anime_db.item_folder_filler.filler_folder')->fillFolder($item);
+
         return $this->render('AnimeDbItemFolderFillerBundle:Filler:fill.html.twig', [
             'item' => $item
         ]);

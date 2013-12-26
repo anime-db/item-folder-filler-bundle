@@ -107,14 +107,14 @@ class FillerFolder extends ItemPlugin
             // copy cover
             $cover = '';
             if (file_exists($item->getAbsolutePath())) {
-                $cover = '/'.self::COVER_FILE_NAME.'.'.pathinfo($item->getCover(), PATHINFO_EXTENSION);
-                copy($item->getAbsolutePath(), $item->getPath().$cover);
+                $cover = self::COVER_FILE_NAME.'.'.pathinfo($item->getCover(), PATHINFO_EXTENSION);
+                copy($item->getAbsolutePath(), $item->getPath().'/'.$cover);
             }
 
             // write information about the item
             file_put_contents(
                 $item->getPath().'/'.self::INFO_FILE_NAME.'.html',
-                $this->templating->render('AnimeDbItemFolderFillerBundle:Fill:info.html.twig', [
+                $this->templating->render('AnimeDbItemFolderFillerBundle:Filler:info.html.twig', [
                     'item' => $item,
                     'cover' => $cover
                 ])
