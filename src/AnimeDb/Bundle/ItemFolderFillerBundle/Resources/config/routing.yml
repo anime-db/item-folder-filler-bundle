@@ -1,0 +1,5 @@
+item_folder_filler_fill:
+    pattern:  /{id}-{name}/fill_item_folder.html
+    defaults: { _controller: AnimeDbItemFolderFillerBundle:Filler:fill }
+    requirements:
+        id:  \d+
