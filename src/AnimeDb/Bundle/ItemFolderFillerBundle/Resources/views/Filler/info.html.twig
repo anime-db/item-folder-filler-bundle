@@ -105,7 +105,7 @@ section,
 		<article>
 			<ul>
 				{% for source in item.sources %}
-					<li>{{ source.url }}</li>
+					<li><a href="{{ source.url }}">{{ source.url }}</a></li>
 				{% endfor %}
 			</ul>
 		</article>
