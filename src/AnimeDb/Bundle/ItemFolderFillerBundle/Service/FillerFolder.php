@@ -17,7 +17,7 @@ use Symfony\Component\Templating\EngineInterface;
 
 /**
  * Plugin item
- * 
+ *
  * @package AnimeDb\Bundle\ItemFolderFillerBundle\Service
  * @author  Peter Gribanov <info@peter-gribanov.ru>
  */
@@ -89,7 +89,7 @@ class FillerFolder extends ItemPlugin
                 'route' => 'item_folder_filler_fill',
                 'routeParameters' => [
                     'id' => $item->getId(),
-                    'name' => $item->getName()
+                    'name' => $item->getUrlName()
                 ]
             ])
                 ->setLinkAttribute('class', 'icon-label icon-fill');
