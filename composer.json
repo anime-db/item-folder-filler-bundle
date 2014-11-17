@@ -6,9 +6,7 @@
 	"homepage" : "http://github.com/anime-db/item-folder-filler-bundle",
 	"version" : "0.1.2",
 	"autoload" : {
-		"psr-0" : {
-			"AnimeDb\\Bundle\\ItemFolderFillerBundle" : "src/"
-		}
+		"psr-4" : { "AnimeDb\\Bundle\\ItemFolderFillerBundle" : "src/" }
 	},
 	"require" : {
 		"php" : ">=5.4.0",
