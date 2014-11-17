@@ -53,15 +53,24 @@ class FillerFolder extends ItemPlugin
     protected $fs;
 
     /**
+     * Root dir
+     *
+     * @var string
+     */
+    protected $root;
+
+    /**
      * Construct
      *
      * @param \Symfony\Component\Templating\EngineInterface $templating
      * @param \Symfony\Component\Filesystem\Filesystem $fs
+     * @param string $root
      */
-    public function __construct(EngineInterface $templating, Filesystem $fs)
+    public function __construct(EngineInterface $templating, Filesystem $fs, $root)
     {
         $this->templating = $templating;
         $this->fs = $fs;
+        $this->root = $root;
     }
 
     /**
@@ -116,9 +125,10 @@ class FillerFolder extends ItemPlugin
         if ($item->getPath() && $this->fs->exists($item->getPath())) {
             // copy cover
             $cover = '';
-            if ($this->fs->exists($item->getAbsolutePath())) {
+            $root = $this->root.$item->getDownloadPath().'/';
+            if ($this->fs->exists($root.$item->getCover())) {
                 $cover = self::COVER_FILE_NAME.'.'.pathinfo($item->getCover(), PATHINFO_EXTENSION);
-                $this->fs->copy($item->getAbsolutePath(), $item->getPath().'/'.$cover);
+                $this->fs->copy($root.$item->getCover(), $item->getPath().'/'.$cover);
             }
 
             // write information about the item

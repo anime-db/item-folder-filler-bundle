@@ -1,6 +1,6 @@
 services:
     anime_db.item_folder_filler.filler_folder:
         class: AnimeDb\Bundle\ItemFolderFillerBundle\Service\FillerFolder
-        arguments: [ @templating, @filesystem ]
+        arguments: [ @templating, @filesystem, %anime_db.downloader.root% ]
         tags:
             -  { name: anime_db.item }
