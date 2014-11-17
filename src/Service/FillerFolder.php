@@ -103,7 +103,7 @@ class FillerFolder extends ItemPlugin
      */
     public function buildMenu(ItemInterface $node, ItemEntity $item)
     {
-        if ($item->getPath() && is_writable($item->getPath())) {
+        if ($item->getPath() && $this->fs->exists($item->getPath())) {
             $node->addChild('Fill folder', [
                 'route' => 'item_folder_filler_fill',
                 'routeParameters' => [
