@@ -14,6 +14,7 @@ use AnimeDb\Bundle\CatalogBundle\Plugin\Item\Item as ItemPlugin;
 use Knp\Menu\ItemInterface;
 use AnimeDb\Bundle\CatalogBundle\Entity\Item as ItemEntity;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Plugin item
@@ -42,16 +43,34 @@ class FillerFolder extends ItemPlugin
      *
      * @var \Symfony\Component\Templating\EngineInterface
      */
-    private $templating;
+    protected $templating;
+
+    /**
+     * Filesystem
+     *
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    protected $fs;
+
+    /**
+     * Root dir
+     *
+     * @var string
+     */
+    protected $root;
 
     /**
      * Construct
      *
      * @param \Symfony\Component\Templating\EngineInterface $templating
+     * @param \Symfony\Component\Filesystem\Filesystem $fs
+     * @param string $root
      */
-    public function __construct(EngineInterface $templating)
+    public function __construct(EngineInterface $templating, Filesystem $fs, $root)
     {
         $this->templating = $templating;
+        $this->fs = $fs;
+        $this->root = $root;
     }
 
     /**
@@ -103,16 +122,17 @@ class FillerFolder extends ItemPlugin
      */
     public function fillFolder(ItemEntity $item)
     {
-        if ($item->getPath() && is_writable($item->getPath())) {
+        if ($item->getPath() && $this->fs->exists($item->getPath())) {
             // copy cover
             $cover = '';
-            if (file_exists($item->getAbsolutePath())) {
+            $root = $this->root.$item->getDownloadPath().'/';
+            if ($this->fs->exists($root.$item->getCover())) {
                 $cover = self::COVER_FILE_NAME.'.'.pathinfo($item->getCover(), PATHINFO_EXTENSION);
-                copy($item->getAbsolutePath(), $item->getPath().'/'.$cover);
+                $this->fs->copy($root.$item->getCover(), $item->getPath().'/'.$cover);
             }
 
             // write information about the item
-            file_put_contents(
+            $this->fs->dumpFile(
                 $item->getPath().'/'.self::INFO_FILE_NAME.'.html',
                 $this->templating->render('AnimeDbItemFolderFillerBundle:Filler:info.html.twig', [
                     'item' => $item,
