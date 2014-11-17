@@ -1,16 +1,18 @@
 {
-    "name": "anime-db/item-folder-filler-bundle",
-    "license": "GPL-3.0",
-    "type": "anime-db-plugin",
-    "description": "Plugin adds information about the item in its folder",
-    "homepage": "http://github.com/anime-db/item-folder-filler-bundle",
-    "version": "0.1.2",
-    "autoload": {
-        "psr-0": { "AnimeDb\\Bundle\\ItemFolderFillerBundle": "src/" }
-    },
-    "require": {
-        "php": ">=5.4.0",
-        "anime-db/catalog-bundle": "dev-develop"
-    },
-    "minimum-stability": "dev"
+	"name" : "anime-db/item-folder-filler-bundle",
+	"license" : "GPL-3.0",
+	"type" : "anime-db-plugin",
+	"description" : "Plugin adds information about the item in its folder",
+	"homepage" : "http://github.com/anime-db/item-folder-filler-bundle",
+	"version" : "0.1.2",
+	"autoload" : {
+		"psr-0" : {
+			"AnimeDb\\Bundle\\ItemFolderFillerBundle" : "src/"
+		}
+	},
+	"require" : {
+		"php" : ">=5.4.0",
+		"anime-db/catalog-bundle" : "dev-develop"
+	},
+	"minimum-stability" : "dev"
 }
