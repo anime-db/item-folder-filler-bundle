@@ -25,18 +25,18 @@ use Symfony\Component\Filesystem\Filesystem;
 class FillerFolder extends ItemPlugin
 {
     /**
-     * Cover file name
+     * Cover filename
      *
      * @var string
      */
-    const COVER_FILE_NAME = 'cover';
+    const COVER_FILENAME = 'cover';
 
     /**
-     * Info file name
+     * Info filename
      *
      * @var string
      */
-    const INFO_FILE_NAME = 'info';
+    const INFO_FILENAME = 'info';
 
     /**
      * Templating
@@ -123,22 +123,56 @@ class FillerFolder extends ItemPlugin
     public function fillFolder(ItemEntity $item)
     {
         if ($item->getPath() && $this->fs->exists($item->getPath())) {
-            // copy cover
-            $cover = '';
-            $root = $this->root.$item->getDownloadPath().'/';
-            if ($this->fs->exists($root.$item->getCover())) {
-                $cover = self::COVER_FILE_NAME.'.'.pathinfo($item->getCover(), PATHINFO_EXTENSION);
-                $this->fs->copy($root.$item->getCover(), $item->getPath().'/'.$cover);
-            }
-
             // write information about the item
             $this->fs->dumpFile(
-                $item->getPath().'/'.self::INFO_FILE_NAME.'.html',
+                $this->getInfo($item),
                 $this->templating->render('AnimeDbItemFolderFillerBundle:Filler:info.html.twig', [
                     'item' => $item,
-                    'cover' => $cover
+                    'cover' => $this->getCover($item)
                 ])
             );
+        }
+    }
+
+    /**
+     * Get cover filename
+     *
+     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     *
+     * @return string
+     */
+    protected function getCover(ItemEntity $item)
+    {
+        $from = $this->root.$item->getDownloadPath().'/'.$item->getCover();
+        if (!$this->fs->exists($from)) {
+            return '';
+        }
+
+        // copy cover
+        $target = $item->getPath().'/';
+        $filename = self::COVER_FILENAME.'.'.pathinfo($item->getCover(), PATHINFO_EXTENSION);
+        if (is_file($item->getPath())) {
+            $target = dirname($item->getPath()).'/';
+            $filename = pathinfo($item->getPath(), PATHINFO_FILENAME).'-'.$filename;
+        }
+        $this->fs->copy($from, $target.$filename);
+        return $filename;
+    }
+
+    /**
+     * Get info filename
+     *
+     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     *
+     * @return string
+     */
+    protected function getInfo(ItemEntity $item)
+    {
+        $filename = self::INFO_FILENAME.'.html';
+        if (is_file($item->getPath())) {
+            return dirname($item->getPath()).pathinfo($item->getPath(), PATHINFO_FILENAME).'-'.$filename;
+        } else {
+            return $item->getPath().'/'.$filename;
         }
     }
 }
