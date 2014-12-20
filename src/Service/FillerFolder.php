@@ -14,6 +14,7 @@ use AnimeDb\Bundle\CatalogBundle\Plugin\Item\Item as ItemPlugin;
 use Knp\Menu\ItemInterface;
 use AnimeDb\Bundle\CatalogBundle\Entity\Item as ItemEntity;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Plugin item
@@ -24,34 +25,52 @@ use Symfony\Component\Templating\EngineInterface;
 class FillerFolder extends ItemPlugin
 {
     /**
-     * Cover file name
+     * Cover filename
      *
      * @var string
      */
-    const COVER_FILE_NAME = 'cover';
+    const COVER_FILENAME = 'cover';
 
     /**
-     * Info file name
+     * Info filename
      *
      * @var string
      */
-    const INFO_FILE_NAME = 'info';
+    const INFO_FILENAME = 'info';
 
     /**
      * Templating
      *
      * @var \Symfony\Component\Templating\EngineInterface
      */
-    private $templating;
+    protected $templating;
+
+    /**
+     * Filesystem
+     *
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    protected $fs;
+
+    /**
+     * Root dir
+     *
+     * @var string
+     */
+    protected $root;
 
     /**
      * Construct
      *
      * @param \Symfony\Component\Templating\EngineInterface $templating
+     * @param \Symfony\Component\Filesystem\Filesystem $fs
+     * @param string $root
      */
-    public function __construct(EngineInterface $templating)
+    public function __construct(EngineInterface $templating, Filesystem $fs, $root)
     {
         $this->templating = $templating;
+        $this->fs = $fs;
+        $this->root = $root;
     }
 
     /**
@@ -84,7 +103,7 @@ class FillerFolder extends ItemPlugin
      */
     public function buildMenu(ItemInterface $node, ItemEntity $item)
     {
-        if ($item->getPath() && is_writable($item->getPath())) {
+        if ($item->getPath() && $this->fs->exists($item->getPath())) {
             $node->addChild('Fill folder', [
                 'route' => 'item_folder_filler_fill',
                 'routeParameters' => [
@@ -103,22 +122,57 @@ class FillerFolder extends ItemPlugin
      */
     public function fillFolder(ItemEntity $item)
     {
-        if ($item->getPath() && is_writable($item->getPath())) {
-            // copy cover
-            $cover = '';
-            if (file_exists($item->getAbsolutePath())) {
-                $cover = self::COVER_FILE_NAME.'.'.pathinfo($item->getCover(), PATHINFO_EXTENSION);
-                copy($item->getAbsolutePath(), $item->getPath().'/'.$cover);
-            }
-
+        if ($item->getPath() && $this->fs->exists($item->getPath())) {
             // write information about the item
-            file_put_contents(
-                $item->getPath().'/'.self::INFO_FILE_NAME.'.html',
+            $this->fs->dumpFile(
+                $this->getInfo($item),
                 $this->templating->render('AnimeDbItemFolderFillerBundle:Filler:info.html.twig', [
                     'item' => $item,
-                    'cover' => $cover
+                    'cover' => $this->getCover($item)
                 ])
             );
+        }
+    }
+
+    /**
+     * Get cover filename
+     *
+     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     *
+     * @return string
+     */
+    protected function getCover(ItemEntity $item)
+    {
+        $from = $this->root.$item->getDownloadPath().'/'.$item->getCover();
+        if (!$this->fs->exists($from)) {
+            return '';
+        }
+
+        // copy cover
+        $target = $item->getPath().'/';
+        $filename = self::COVER_FILENAME.'.'.pathinfo($item->getCover(), PATHINFO_EXTENSION);
+        if (is_file($item->getPath())) {
+            $target = dirname($item->getPath()).'/';
+            $filename = pathinfo($item->getPath(), PATHINFO_FILENAME).'-'.$filename;
+        }
+        $this->fs->copy($from, $target.$filename);
+        return $filename;
+    }
+
+    /**
+     * Get info filename
+     *
+     * @param \AnimeDb\Bundle\CatalogBundle\Entity\Item $item
+     *
+     * @return string
+     */
+    protected function getInfo(ItemEntity $item)
+    {
+        $filename = self::INFO_FILENAME.'.html';
+        if (is_file($item->getPath())) {
+            return dirname($item->getPath()).pathinfo($item->getPath(), PATHINFO_FILENAME).'-'.$filename;
+        } else {
+            return $item->getPath().'/'.$filename;
         }
     }
 }
